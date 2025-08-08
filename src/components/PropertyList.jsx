@@ -1,31 +1,57 @@
 import { useEffect, useState } from 'react';
 import PropertyCard from './PropertyCard';
 import { getProperties } from '../wordpress';
+import Filters from './Filters';
 
 const PropertyList = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({
+    search: '',
+    propertyType: '',
+    amenity: '',
+    minPrice: '',
+    maxPrice: ''
+  });
 
   useEffect(() => {
     const fetchProperties = async () => {
-      const data = await getProperties();
+      setLoading(true);
+      const data = await getProperties(filters);
       setProperties(data);
       setLoading(false);
     };
 
-    fetchProperties();
-  }, []);
+    const timer = setTimeout(() => {
+      fetchProperties();
+    }, 300);
 
-  if (loading) return <div>Loading properties...</div>;
+    return () => clearTimeout(timer);
+  }, [filters]);
 
   return (
-    <div className="property-list">
-      {properties.length > 0 ? (
-        properties.map((property) => (
-          <PropertyCard key={property.id} property={property} />
-        ))
+    <div className="property-list-container">
+      <Filters 
+        filters={filters} 
+        onFilterChange={setFilters} 
+      />
+      
+      {loading ? (
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+          <p>Loading properties...</p>
+        </div>
+      ) : properties.length > 0 ? (
+        <div className="property-grid">
+          {properties.map((property) => (
+            <PropertyCard key={property.id} property={property} />
+          ))}
+        </div>
       ) : (
-        <p>No properties found.</p>
+        <div className="no-results">
+          <h3>No properties found</h3>
+          <p>Try adjusting your search or filters</p>
+        </div>
       )}
     </div>
   );
