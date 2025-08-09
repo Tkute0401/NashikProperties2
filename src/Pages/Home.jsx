@@ -1,12 +1,12 @@
 import PropertyList from '../components/PropertyList';
+import HeroSection from '../components/HeroSection';
+import StatsSection from '../components/StatsSection';
 
 const Home = () => {
   return (
     <div className="home-page">
-      <header className="page-header">
-        <h1>Featured Properties</h1>
-        <p>Find your dream home from our exclusive listings</p>
-      </header>
+      <HeroSection />
+      <StatsSection />
       <PropertyList />
     </div>
   );

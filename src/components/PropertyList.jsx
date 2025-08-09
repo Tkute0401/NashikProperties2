@@ -17,9 +17,14 @@ const PropertyList = () => {
   useEffect(() => {
     const fetchProperties = async () => {
       setLoading(true);
-      const data = await getProperties(filters);
-      setProperties(data);
-      setLoading(false);
+      try {
+        const data = await getProperties(filters);
+        setProperties(data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     const timer = setTimeout(() => {
