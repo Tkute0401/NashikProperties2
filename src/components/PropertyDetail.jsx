@@ -9,6 +9,10 @@ import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
 import KeyboardArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardArrowLeftOutlined';
+import StarOutlineOutlinedIcon from '@mui/icons-material/StarOutlineOutlined';
+import PhoneIcon from '@mui/icons-material/Phone';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 
 const PropertyDetail = () => {
   const { id } = useParams();
@@ -17,13 +21,19 @@ const PropertyDetail = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      const foundProperty = mockProperties.find(p => p.id === parseInt(id));
-      setProperty(foundProperty);
+  const fetchProperty = async () => {
+    try {
+      const propertyData = await getPropertyById(id);
+      setProperty(propertyData);
       setLoading(false);
-    }, 500);
-  }, [id]);
+    } catch (error) {
+      console.error('Error fetching property:', error);
+      setLoading(false);
+    }
+  };
+  
+  fetchProperty();
+}, [id]);
 
   const galleryImages = property?.acf?.photo_gallery?.images?.[0] || [];
   
@@ -116,7 +126,7 @@ const PropertyDetail = () => {
               <div className="property-rating">
                 <div className="rating-stars">
                   {[...Array(5)].map((_, i) => (
-                    <FaStar key={i} className={`star ${i < Math.floor(property.rating) ? '' : 'inactive'}`} />
+                    <StarOutlineOutlinedIcon key={i} className={`star ${i < Math.floor(property.rating) ? '' : 'inactive'}`} />
                   ))}
                 </div>
                 <span className="rating-number">{property.rating}</span>
@@ -229,15 +239,15 @@ const PropertyDetail = () => {
           <p>Contact our expert team for more information, virtual tours, or to schedule a viewing</p>
           <div className="contact-buttons">
             <button className="contact-btn phone-btn">
-              <FaPhone />
+              <PhoneIcon />
               Call Now
             </button>
             <button className="contact-btn whatsapp-btn">
-              <FaWhatsapp />
+              <WhatsAppIcon />
               WhatsApp
             </button>
             <button className="contact-btn email-btn">
-              <FaEnvelope />
+              <EmailOutlinedIcon />
               Email Us
             </button>
           </div>

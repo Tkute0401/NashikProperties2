@@ -34,12 +34,20 @@ const PropertyList = () => {
     return () => clearTimeout(timer);
   }, [filters]);
 
+  const handleRemoveFilter = (filterName) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterName]: filterName === 'amenity' ? '' : null
+    }));
+  };
+
   return (
     <div className="property-list-container">
       <Filters 
         filters={filters} 
         onFilterChange={setFilters} 
       />
+      
       
       {loading ? (
         <div className="loading-spinner">
@@ -62,4 +70,4 @@ const PropertyList = () => {
   );
 };
 
-export default PropertyList;
+export default PropertyList;  
